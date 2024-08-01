@@ -27,8 +27,7 @@
       .split("")                       // generate array
       .filter((w) => (w!==""))         // remove empty string elem
 
-  // TODO
-  const word_array = (text) => []
+  const word_array = (text) => text.match(/[a-zñáéíóú]+/gi);
 
   const sentence_array = (text) =>
       clean_string(text)     
@@ -53,7 +52,7 @@
     let {text, view} = getIO();
 
     let result =  `Caracteres: ${char_array(text).length}\n`; 
-        result += `Palabras: ${"No implementado"/*TO DO*/}\n`;
+        result += `Palabras: ${word_array(text).length}\n`;
         result += `Frases: ${sentence_array(text).length}\n`;
         result += `Lineas: ${text.split("\n").length}\n`;
     
@@ -76,8 +75,20 @@
     view.innerHTML = result;
   };
 
-  // TODO
   const word_index = () => {
+    let {text, view} = getIO();
+
+    let ordered_words = 
+      word_array(text)
+      .map(el => el.toLowerCase())
+      .sort();
+
+    let result = 
+      repetitions(ordered_words)
+      .map(el => `${el.s}: ${el.n}`)
+      .join("\n");                  
+
+    view.innerHTML = result;
   };
 
   const sentence_index = () => {
@@ -114,8 +125,23 @@
     view.innerHTML = result;
   };
 
-  // TODO
   const search_words = () => {
+    let {text, view, search} = getIO();
+
+    let ordered_words = 
+      word_array(text)
+        .map(el => el.toLowerCase())
+        .filter(el => el.includes(search.toLowerCase()))
+        .sort();
+
+    let result = `Hay ${ordered_words.length} palabras que contienen '${search}'.\n\n`
+
+    result +=
+      repetitions(ordered_words)      
+        .map(el => `${el.n} repeticiones de:  ${el.s}`)  
+        .join("\n");                    
+
+    view.innerHTML = result;
   };
 
   const search_sentences = () => {
@@ -155,7 +181,7 @@
 Introduzca un texto para analizarlo:<br>
 <textarea rows=10 cols=50 id="text" name="text"></textarea>
 <p>
-  <button class="count" >Contar</button><!-- TODO-->
+  <button class="count" >Contar</button>
   <button class="letter_index" >Repeticiones de letras</button>
   <button class="word_index" >Repeticiones de palabras</button>
   <button class="sentence_index" >Repeticiones de frases</button>
